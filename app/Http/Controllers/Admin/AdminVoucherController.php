@@ -1,0 +1,103 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Voucher;
+use Illuminate\Http\Request;
+
+class AdminVoucherController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $vouchers = Voucher::all();
+        return view('admin.page.voucher.index', compact('vouchers'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('admin.page.voucher.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'dateStart' => 'required',
+            'dateEnd' => 'required',
+            'number' => 'required',
+            'value' => 'required',
+        ]);
+        Voucher::create([
+            'name' => $request->name,
+            'code' => $request->code,
+            'dateStart' => $request->dateStart,
+            'dateEnd' => $request->dateEnd,
+            'number' => $request->number,
+            'value' => $request->value,
+        ]);
+        // toastr()->success('Successfully', 'Added voucher');
+        return redirect()->route('admin.voucher.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Voucher $voucher)
+    {
+        return view('admin.page.voucher.edit', compact('voucher'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Voucher $voucher)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'dateStart' => 'required',
+            'dateEnd' => 'required',
+            'number' => 'required',
+            'value' => 'required',
+        ]);
+        $voucher->fill([
+            'name' => $request->name,
+            'code' => $request->code,
+            'dateStart' => $request->dateStart,
+            'dateEnd' => $request->dateEnd,
+            'number' => $request->number,
+            'value' => $request->value,
+        ])->save();
+        // toastr()->success('Successfully', 'Updated voucher');
+        return redirect()->route('admin.voucher.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Voucher $voucher)
+    {
+        $voucher->delete();
+        // toastr()->success('Successfully', 'Deleted voucher');
+        return redirect()->route('admin.voucher.index');
+    }
+}
